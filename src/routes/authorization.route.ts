@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express";
-import ForbiddenError from "../models/errors/forbidden.error.models";
-import userRepository from "../repositories/user.repository";
-import JWT from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
+import JWT from "jsonwebtoken";
 import basicAuthenticationMiddleware from "../middlewares/basic-authentication.middleware";
+import jwtAuthenticationMiddleware from "../middlewares/jwt-authentication.middleware";
 
 const authorizationRouter = Router();
 
@@ -21,5 +20,9 @@ authorizationRouter.post('/token', basicAuthenticationMiddleware, async (req: Re
         next(error);
     }
 });
+
+authorizationRouter.post('/token/validate', jwtAuthenticationMiddleware, (req: Request, res: Response, next: NextFunction) => {
+    res.sendStatus(StatusCodes.OK);
+})
 
 export default authorizationRouter;
